@@ -31,7 +31,7 @@ public class Currency implements Serializable {
     @NotNull(message = "Value of price should not be empty")
     private Double price;
 
-    @Column(name = "coin_num")
+    @Column(name = "coin_id")
     @NotEmpty(message = "Coin number of currency should not be empty")
     private Integer coinNum;
 

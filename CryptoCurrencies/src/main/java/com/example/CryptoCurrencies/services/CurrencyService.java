@@ -23,10 +23,22 @@ public class CurrencyService {
         this.restTemplate = restTemplate;
     }
 
-
-    public String getPostsPlainJSON() {
-        String url = "https://api.coinlore.net/api/tickers/";
+    public String getJSON(int coinId) {
+        String url = "https://api.coinlore.net/api/ticker/?id=" + coinId;
         return this.restTemplate.getForObject(url, String.class);
+    }
+
+    public void parseJson() {
+
+    }
+
+    public Double getPriceForCurrency(int coinId) {
+        Optional<Currency> currencyFromDB = currencyRepository.findByCoinNum(coinId);
+        double price = 0.0;
+        if (currencyFromDB.isPresent()) {
+            price = currencyFromDB.get().getPrice();
+        }
+        return price;
     }
 
     public Optional<Currency> findByName(String name) {
@@ -34,6 +46,7 @@ public class CurrencyService {
     }
 
     public Optional<Currency> findByCoinNum(int coinNum) {
+        getJSON(coinNum);
         return currencyRepository.findByCoinNum(coinNum);
     }
 

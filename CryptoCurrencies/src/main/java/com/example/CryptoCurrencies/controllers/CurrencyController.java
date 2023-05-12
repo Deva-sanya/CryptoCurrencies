@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/Currency")
+@RequestMapping("/currency")
 public class CurrencyController {
 
     private final CurrencyService currencyService;
@@ -24,6 +24,11 @@ public class CurrencyController {
     public CurrencyController(CurrencyService currencyService, ModelMapper modelMapper) {
         this.currencyService = currencyService;
         this.modelMapper = modelMapper;
+    }
+
+    @GetMapping("/json")
+    public String json(@RequestParam("coin_id") int coinNum){
+        return currencyService.getJSON(coinNum);
     }
 
     @GetMapping("/all")
@@ -40,6 +45,11 @@ public class CurrencyController {
     public Optional<Currency> findByCoinNum(@RequestParam("coinNum") int coinNum) {
         return currencyService.findByCoinNum(coinNum);
     }
+
+    @GetMapping("/getPrice")
+    public double findPrice(@RequestParam("coinNum") int coinNum) {
+        return currencyService.getPriceForCurrency(coinNum);
+    } 
 
     @PostMapping(value = "/add")
     public ResponseEntity<HttpStatus> addCurrency(@RequestBody @Valid CurrencyDTO currencyDTO) {
