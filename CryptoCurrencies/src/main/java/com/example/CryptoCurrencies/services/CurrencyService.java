@@ -2,11 +2,13 @@ package com.example.CryptoCurrencies.services;
 
 import com.example.CryptoCurrencies.models.Currency;
 import com.example.CryptoCurrencies.repositories.CurrencyRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,13 +25,25 @@ public class CurrencyService {
         this.restTemplate = restTemplate;
     }
 
-    public String getJSON(int coinId) {
-        String url = "https://api.coinlore.net/api/ticker/?id=" + coinId;
+    public String getJSON() {
+        String url = "https://api.coinlore.net/api/ticker/?id=80";
         return this.restTemplate.getForObject(url, String.class);
     }
 
     public void parseJson() {
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonStr = getJSON();
 
+        try {
+            Currency currency = mapper.readValue(jsonStr, Currency.class);
+            System.out.println(currency.getCoinNum());
+            System.out.println(currency.getPrice());
+            System.out.println(currency.getName());
+            System.out.println(currency.getId());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public Double getPriceForCurrency(int coinId) {
@@ -46,7 +60,7 @@ public class CurrencyService {
     }
 
     public Optional<Currency> findByCoinNum(int coinNum) {
-        getJSON(coinNum);
+        //coinNum = getJSON()
         return currencyRepository.findByCoinNum(coinNum);
     }
 

@@ -27,8 +27,8 @@ public class CurrencyController {
     }
 
     @GetMapping("/json")
-    public String json(@RequestParam("coin_id") int coinNum){
-        return currencyService.getJSON(coinNum);
+    public void json(){
+        currencyService.parseJson();
     }
 
     @GetMapping("/all")
@@ -49,7 +49,7 @@ public class CurrencyController {
     @GetMapping("/getPrice")
     public double findPrice(@RequestParam("coinNum") int coinNum) {
         return currencyService.getPriceForCurrency(coinNum);
-    } 
+    }
 
     @PostMapping(value = "/add")
     public ResponseEntity<HttpStatus> addCurrency(@RequestBody @Valid CurrencyDTO currencyDTO) {
@@ -65,6 +65,5 @@ public class CurrencyController {
     private CurrencyDTO convertToCurrencyDTO(Currency currency) {
         return modelMapper.map(currency, CurrencyDTO.class);
     }
-
 
 }

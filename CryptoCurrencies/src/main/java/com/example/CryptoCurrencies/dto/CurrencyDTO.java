@@ -18,7 +18,7 @@ public class CurrencyDTO {
     @NotNull(message = "Value of price should not be empty")
     double price;
 
-    @NotEmpty(message = "Coin number of currency should not be empty")
+    @NotEmpty(message = "Coin id of currency should not be empty")
     private int coinNum;
 
 }

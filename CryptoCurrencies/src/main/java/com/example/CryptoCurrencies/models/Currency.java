@@ -10,7 +10,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-
 @Setter
 @Getter
 @Entity
@@ -32,7 +31,7 @@ public class Currency implements Serializable {
     private Double price;
 
     @Column(name = "coin_id")
-    @NotEmpty(message = "Coin number of currency should not be empty")
+    @NotEmpty(message = "Coin id of currency should not be empty")
     private Integer coinNum;
 
 }
