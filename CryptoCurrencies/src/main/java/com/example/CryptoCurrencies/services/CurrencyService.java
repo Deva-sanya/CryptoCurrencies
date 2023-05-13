@@ -34,34 +34,19 @@ public class CurrencyService {
         ObjectMapper mapper = new ObjectMapper();
         String jsonStr = getJSON();
 
-        try {
-            Currency currency = mapper.readValue(jsonStr, Currency.class);
-            System.out.println(currency.getCoinNum());
-            System.out.println(currency.getPrice());
-            System.out.println(currency.getName());
-            System.out.println(currency.getId());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public Double getPriceForCurrency(int coinId) {
+    /*public Double getPriceForCurrency(int coinId) {
         Optional<Currency> currencyFromDB = currencyRepository.findByCoinNum(coinId);
         double price = 0.0;
         if (currencyFromDB.isPresent()) {
             price = currencyFromDB.get().getPrice();
         }
         return price;
-    }
+    }*/
 
-    public Optional<Currency> findByName(String name) {
-        return currencyRepository.findByName(name);
-    }
-
-    public Optional<Currency> findByCoinNum(int coinNum) {
-        //coinNum = getJSON()
-        return currencyRepository.findByCoinNum(coinNum);
+    public Optional<Currency> findBySymbol(String symbol) {
+        return currencyRepository.findBySymbol(symbol);
     }
 
     public List<Currency> findAll() {

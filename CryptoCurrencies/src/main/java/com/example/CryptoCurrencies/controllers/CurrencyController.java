@@ -36,20 +36,16 @@ public class CurrencyController {
         return currencyService.findAll();
     }
 
-    @GetMapping("/byName")
-    public Optional<Currency> findByName(@RequestParam("name") String name) {
-        return currencyService.findByName(name);
+    @GetMapping("/symbol")
+    public Optional<Currency> findByName(@RequestParam("symbol") String symbol) {
+        return currencyService.findBySymbol(symbol);
     }
 
-    @GetMapping("/bySymbol")
-    public Optional<Currency> findByCoinNum(@RequestParam("coinNum") int coinNum) {
-        return currencyService.findByCoinNum(coinNum);
-    }
 
-    @GetMapping("/getPrice")
+    /*@GetMapping("/getPrice")
     public double findPrice(@RequestParam("coinNum") int coinNum) {
         return currencyService.getPriceForCurrency(coinNum);
-    }
+    }*/
 
     @PostMapping(value = "/add")
     public ResponseEntity<HttpStatus> addCurrency(@RequestBody @Valid CurrencyDTO currencyDTO) {
