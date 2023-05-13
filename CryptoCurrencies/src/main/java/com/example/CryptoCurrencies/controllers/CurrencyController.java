@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -26,11 +27,6 @@ public class CurrencyController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping("/json")
-    public void json(){
-        currencyService.parseJson();
-    }
-
     @GetMapping("/all")
     public List<Currency> allCurrencies() {
         return currencyService.findAll();
@@ -41,16 +37,10 @@ public class CurrencyController {
         return currencyService.findBySymbol(symbol);
     }
 
-
-    /*@GetMapping("/getPrice")
-    public double findPrice(@RequestParam("coinNum") int coinNum) {
-        return currencyService.getPriceForCurrency(coinNum);
-    }*/
-
-    @PostMapping(value = "/add")
-    public ResponseEntity<HttpStatus> addCurrency(@RequestBody @Valid CurrencyDTO currencyDTO) {
+    @PostMapping(value = "/getPrice")
+    public ResponseEntity<HttpStatus> saveCurrentPrice(@RequestBody @Valid CurrencyDTO currencyDTO, BindingResult bindingResult) {
         Currency currencyToAdd = convertToCurrency(currencyDTO);
-        currencyService.saveCurrency(currencyToAdd);
+        currencyService.savePrice(currencyToAdd);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

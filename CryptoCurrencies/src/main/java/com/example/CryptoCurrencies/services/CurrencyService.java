@@ -3,12 +3,14 @@ package com.example.CryptoCurrencies.services;
 import com.example.CryptoCurrencies.models.Currency;
 import com.example.CryptoCurrencies.repositories.CurrencyRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,10 +32,22 @@ public class CurrencyService {
         return this.restTemplate.getForObject(url, String.class);
     }
 
-    public void parseJson() {
-        ObjectMapper mapper = new ObjectMapper();
+    public Double getPrice() {
         String jsonStr = getJSON();
+        JSONObject obj = new JSONObject(jsonStr);
+        System.out.println(obj.getDouble("price_usd"));
+        return obj.getDouble("price_usd");
+    }
 
+    @Transactional
+    public void savePrice(Currency currency) {
+        enrichPrice(currency);
+        currencyRepository.save(currency);
+    }
+
+    public void enrichPrice(Currency currency) {
+        currency.setPrice(getPrice());
+        currency.setPriceDateTime(LocalDateTime.now());
     }
 
     /*public Double getPriceForCurrency(int coinId) {

@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -28,6 +29,10 @@ public class Currency implements Serializable {
     @Column(name = "price")
     @NotNull(message = "Value of price should not be empty")
     private Double price;
+
+    @Column(name = "time")
+    @NotNull
+    private LocalDateTime priceDateTime;
 
 
 }
