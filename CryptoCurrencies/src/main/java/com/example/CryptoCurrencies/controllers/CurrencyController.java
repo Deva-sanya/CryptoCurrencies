@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/currency")
@@ -40,11 +39,8 @@ public class CurrencyController {
 
     @PostMapping(value = "/getPrice")
     public ResponseEntity<HttpStatus> saveCurrentPrice(@RequestBody @Valid CurrencyDTO currencyDTO, BindingResult bindingResult, @RequestParam("symbol") String symbol) throws JsonProcessingException {
-        int id = 0;
         Currency currencyToAdd = convertToCurrency(currencyDTO);
-        Currency currency = currencyService.findBySymbol(symbol);
-        id = currency.getId();
-        currencyService.savePrice(currency, id);
+        currencyService.savePrice(currencyToAdd, symbol);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

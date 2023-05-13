@@ -5,7 +5,6 @@ import com.example.CryptoCurrencies.repositories.CurrencyRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,23 +31,37 @@ public class CurrencyService {
         return this.restTemplate.getForObject(url, String.class);
     }
 
-    public Double getPrice(int id) throws JsonProcessingException {
-        String jsonStr = getJSON(id);
-        JsonNode parent= new ObjectMapper().readTree(jsonStr);
-        Double price = parent.get("price_usd").asDouble();
-
+    public Double getPrice(String symbol) throws JsonProcessingException {
+        Double price = 0.0;
+        switch(symbol) {
+            case "BTS":
+                String jsonStr = getJSON(90);
+                JsonNode obj = new ObjectMapper().readTree(jsonStr);
+                price = obj.get("price_usd").asDouble();
+                break;
+            case "ETH":
+                jsonStr = getJSON(80);
+                obj = new ObjectMapper().readTree(jsonStr);
+                price = obj.get("price_usd").asDouble();
+                break;
+            case "SOL":
+                jsonStr = getJSON(48543);
+                obj = new ObjectMapper().readTree(jsonStr);
+                price = obj.get("price_usd").asDouble();
+                break;
+        }
         System.out.println(price);
         return price;
     }
 
     @Transactional
-    public void savePrice(Currency currency, int id) throws JsonProcessingException {
-        enrichPrice(currency, id);
+    public void savePrice(Currency currency, String symbol) throws JsonProcessingException {
+        enrichPrice(currency,symbol);
         currencyRepository.save(currency);
     }
 
-    public void enrichPrice(Currency currency, int id) throws JsonProcessingException {
-        currency.setPrice(getPrice(id));
+    public void enrichPrice(Currency currency, String symbol) throws JsonProcessingException {
+        currency.setPrice(getPrice(symbol));
         currency.setPriceDateTime(LocalDateTime.now());
     }
 
