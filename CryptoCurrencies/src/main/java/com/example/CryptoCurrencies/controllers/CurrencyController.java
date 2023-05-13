@@ -3,6 +3,7 @@ package com.example.CryptoCurrencies.controllers;
 import com.example.CryptoCurrencies.dto.CurrencyDTO;
 import com.example.CryptoCurrencies.models.Currency;
 import com.example.CryptoCurrencies.services.CurrencyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,14 +34,17 @@ public class CurrencyController {
     }
 
     @GetMapping("/symbol")
-    public Optional<Currency> findByName(@RequestParam("symbol") String symbol) {
+    public Currency findByName(@RequestParam("symbol") String symbol) {
         return currencyService.findBySymbol(symbol);
     }
 
     @PostMapping(value = "/getPrice")
-    public ResponseEntity<HttpStatus> saveCurrentPrice(@RequestBody @Valid CurrencyDTO currencyDTO, BindingResult bindingResult) {
+    public ResponseEntity<HttpStatus> saveCurrentPrice(@RequestBody @Valid CurrencyDTO currencyDTO, BindingResult bindingResult, @RequestParam("symbol") String symbol) throws JsonProcessingException {
+        int id = 0;
         Currency currencyToAdd = convertToCurrency(currencyDTO);
-        currencyService.savePrice(currencyToAdd);
+        Currency currency = currencyService.findBySymbol(symbol);
+        id = currency.getId();
+        currencyService.savePrice(currency, id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

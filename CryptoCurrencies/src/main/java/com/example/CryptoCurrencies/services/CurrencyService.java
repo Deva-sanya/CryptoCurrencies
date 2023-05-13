@@ -2,6 +2,8 @@ package com.example.CryptoCurrencies.services;
 
 import com.example.CryptoCurrencies.models.Currency;
 import com.example.CryptoCurrencies.repositories.CurrencyRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,39 +28,32 @@ public class CurrencyService {
         this.restTemplate = restTemplate;
     }
 
-    public String getJSON() {
-        String url = "https://api.coinlore.net/api/ticker/?id=80";
+    public String getJSON(int id) {
+        String url = "https://api.coinlore.net/api/ticker/?id="+ id;
         return this.restTemplate.getForObject(url, String.class);
     }
 
-    public Double getPrice() {
-        String jsonStr = getJSON();
-        JSONObject obj = new JSONObject(jsonStr);
-        System.out.println(obj.getDouble("price_usd"));
-        return obj.getDouble("price_usd");
+    public Double getPrice(int id) throws JsonProcessingException {
+        String jsonStr = getJSON(id);
+        JsonNode parent= new ObjectMapper().readTree(jsonStr);
+        Double price = parent.get("price_usd").asDouble();
+
+        System.out.println(price);
+        return price;
     }
 
     @Transactional
-    public void savePrice(Currency currency) {
-        enrichPrice(currency);
+    public void savePrice(Currency currency, int id) throws JsonProcessingException {
+        enrichPrice(currency, id);
         currencyRepository.save(currency);
     }
 
-    public void enrichPrice(Currency currency) {
-        currency.setPrice(getPrice());
+    public void enrichPrice(Currency currency, int id) throws JsonProcessingException {
+        currency.setPrice(getPrice(id));
         currency.setPriceDateTime(LocalDateTime.now());
     }
 
-    /*public Double getPriceForCurrency(int coinId) {
-        Optional<Currency> currencyFromDB = currencyRepository.findByCoinNum(coinId);
-        double price = 0.0;
-        if (currencyFromDB.isPresent()) {
-            price = currencyFromDB.get().getPrice();
-        }
-        return price;
-    }*/
-
-    public Optional<Currency> findBySymbol(String symbol) {
+    public Currency findBySymbol(String symbol) {
         return currencyRepository.findBySymbol(symbol);
     }
 
