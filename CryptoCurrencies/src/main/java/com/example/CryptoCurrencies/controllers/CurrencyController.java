@@ -40,7 +40,7 @@ public class CurrencyController {
 
 
     @Scheduled(fixedRate = 60000)
-    @PostMapping(value = "/getPrice")
+    @PostMapping("/getPrice")
     public ResponseEntity<HttpStatus> getPrice() throws JsonProcessingException {
         List<Currency> currencies = currencyService.findAll();
         List symbolDB = new ArrayList();
@@ -50,10 +50,23 @@ public class CurrencyController {
 
             symbolDB.add(currencies.get(i).getSymbol());
             String symbolDBSTR = (String) symbolDB.get(i);
-            currencyService.savePrice(currencyDB,symbolDBSTR);
+            currencyService.savePrice(currencyDB, symbolDBSTR);
         }
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    @GetMapping("/notify")
+    public String notify(@RequestParam("name") String name, @RequestParam("symbol") String symbol) throws JsonProcessingException {
+        List<Currency> currencies = currencyService.findAll();
+        for (int i = 0; i < currencies.size(); i++) {
+            Currency currencyDB = currencies.get(i);
+            currencyService.savePrice(currencyDB, symbol);
+        }
+        String hello = "Hello, " + name + " you checked currency with symbol " + symbol + ". Current price: " +
+                currencyService.getPriceBySymbol(symbol);
+        return hello;
+    }
+
 
     @GetMapping("/price")
     public Double findPriceBySymbol(@RequestParam("symbol") String symbol) {
