@@ -18,12 +18,10 @@ import java.util.List;
 public class CurrencyController {
 
     private final CurrencyService currencyService;
-    private final ModelMapper modelMapper;
 
     @Autowired
-    public CurrencyController(CurrencyService currencyService, ModelMapper modelMapper) {
+    public CurrencyController(CurrencyService currencyService) {
         this.currencyService = currencyService;
-        this.modelMapper = modelMapper;
     }
 
     @GetMapping("/all")
