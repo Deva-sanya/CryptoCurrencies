@@ -1,0 +1,10 @@
+create table crypto_currency (
+    id int, symbol varchar(3)
+);
+insert into crypto_currency values (90,'BTS');
+insert into crypto_currency values (80,'ETH');
+insert into crypto_currency values (48543,'SOL');
+select * from crypto_currency;
+alter table crypto_currency add column price double precision;
+alter table crypto_currency add column time timestamp;
+select * from crypto_currency;

@@ -3,7 +3,6 @@ package com.example.CryptoCurrencies.services;
 import com.example.CryptoCurrencies.models.Currency;
 import com.example.CryptoCurrencies.repositories.CurrencyRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,48 +19,59 @@ public class CurrencyService {
     private final CurrencyRepository currencyRepository;
     private final RestTemplate restTemplate;
 
+
     @Autowired
     public CurrencyService(CurrencyRepository currencyRepository, RestTemplate restTemplate) {
         this.currencyRepository = currencyRepository;
         this.restTemplate = restTemplate;
     }
 
-    public String getJSON(int id) {
-        String url = "https://api.coinlore.net/api/ticker/?id="+ id;
-        return this.restTemplate.getForObject(url, String.class);
+    public String getJSONStr(int id) {
+        String url = "https://api.coinlore.net/api/ticker/?id=" + id;
+        return restTemplate.getForObject(url, String.class);
     }
 
     public Double getPrice(String symbol) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         Double price = 0.0;
-        switch(symbol) {
-            case "BTS":
-                String jsonStr = getJSON(90);
-                JsonNode obj = new ObjectMapper().readTree(jsonStr);
-                price = obj.get("price_usd").asDouble();
+        switch (symbol) {
+            case "BTC":
+                String jsonStr = getJSONStr(90);
+                Currency[] jsonObj = mapper.readValue(jsonStr, Currency[].class);
+                for (Currency itr : jsonObj) {
+                    price = itr.getPrice_usd();
+                    System.out.println("Price: " + itr.getPrice_usd());
+                }
                 break;
             case "ETH":
-                jsonStr = getJSON(80);
-                obj = new ObjectMapper().readTree(jsonStr);
-                price = obj.get("price_usd").asDouble();
+                jsonStr = getJSONStr(80);
+                jsonObj = mapper.readValue(jsonStr, Currency[].class);
+                for (Currency itr : jsonObj) {
+                    price = itr.getPrice_usd();
+                    System.out.println("Price: " + itr.getPrice_usd());
+                }
                 break;
             case "SOL":
-                jsonStr = getJSON(48543);
-                obj = new ObjectMapper().readTree(jsonStr);
-                price = obj.get("price_usd").asDouble();
-                break;
+                jsonStr = getJSONStr(48543);
+                jsonObj = mapper.readValue(jsonStr, Currency[].class);
+                for (Currency itr : jsonObj) {
+                    price = itr.getPrice_usd();
+                    System.out.println("Price: " + itr.getPrice_usd());
+                }
         }
-        System.out.println(price);
         return price;
     }
 
+
     @Transactional
-    public void savePrice(Currency currency, String symbol) throws JsonProcessingException {
-        enrichPrice(currency,symbol);
+    public Currency savePrice(Currency currency, String symbol) throws JsonProcessingException {
+        enrichPrice(currency, symbol);
         currencyRepository.save(currency);
+        return currency;
     }
 
     public void enrichPrice(Currency currency, String symbol) throws JsonProcessingException {
-        currency.setPrice(getPrice(symbol));
+        currency.setPrice_usd(getPrice(symbol));
         currency.setPriceDateTime(LocalDateTime.now());
     }
 
@@ -71,11 +81,6 @@ public class CurrencyService {
 
     public List<Currency> findAll() {
         return currencyRepository.findAll();
-    }
-
-    @Transactional
-    public void saveCurrency(Currency currency) {
-        currencyRepository.save(currency);
     }
 
 }

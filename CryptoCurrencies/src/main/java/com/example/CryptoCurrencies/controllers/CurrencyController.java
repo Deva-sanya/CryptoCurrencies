@@ -8,7 +8,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -37,8 +37,9 @@ public class CurrencyController {
         return currencyService.findBySymbol(symbol);
     }
 
+    //@Scheduled(fixedRate = 60000)
     @PostMapping(value = "/getPrice")
-    public ResponseEntity<HttpStatus> saveCurrentPrice(@RequestBody @Valid CurrencyDTO currencyDTO, BindingResult bindingResult, @RequestParam("symbol") String symbol) throws JsonProcessingException {
+    public ResponseEntity<HttpStatus> saveCurrentPrice(@RequestBody @Valid CurrencyDTO currencyDTO, @RequestParam("symbol") String symbol) throws JsonProcessingException {
         Currency currencyToAdd = convertToCurrency(currencyDTO);
         currencyService.savePrice(currencyToAdd, symbol);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -46,10 +47,6 @@ public class CurrencyController {
 
     private Currency convertToCurrency(CurrencyDTO currencyDTO) {
         return modelMapper.map(currencyDTO, Currency.class);
-    }
-
-    private CurrencyDTO convertToCurrencyDTO(Currency currency) {
-        return modelMapper.map(currency, CurrencyDTO.class);
     }
 
 }

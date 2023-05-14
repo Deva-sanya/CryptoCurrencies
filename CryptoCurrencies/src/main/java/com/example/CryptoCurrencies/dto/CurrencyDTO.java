@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -16,6 +17,8 @@ public class CurrencyDTO {
     private String symbol;
 
     @NotNull(message = "Value of price should not be empty")
-    double price;
+    private Double price_usd;
+
+    private LocalDateTime priceDateTime;
 
 }

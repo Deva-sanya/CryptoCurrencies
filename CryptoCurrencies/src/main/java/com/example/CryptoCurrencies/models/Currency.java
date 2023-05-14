@@ -1,6 +1,6 @@
 package com.example.CryptoCurrencies.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +14,10 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Entity
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Table(name = "crypto_currency")
 public class Currency implements Serializable {
     @Id
-    @JsonIgnore
     @Column(name = "id")
     private Integer id;
 
@@ -28,7 +28,7 @@ public class Currency implements Serializable {
 
     @Column(name = "price")
     @NotNull(message = "Value of price should not be empty")
-    private Double price;
+    private Double price_usd;
 
     @Column(name = "time")
     @NotNull
