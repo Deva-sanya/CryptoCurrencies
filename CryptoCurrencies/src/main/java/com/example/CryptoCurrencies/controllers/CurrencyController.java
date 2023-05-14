@@ -1,6 +1,5 @@
 package com.example.CryptoCurrencies.controllers;
 
-import com.example.CryptoCurrencies.dto.CurrencyDTO;
 import com.example.CryptoCurrencies.models.Currency;
 import com.example.CryptoCurrencies.services.CurrencyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -11,9 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
