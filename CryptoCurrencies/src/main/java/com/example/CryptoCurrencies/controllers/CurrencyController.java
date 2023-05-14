@@ -34,6 +34,11 @@ public class CurrencyController {
         return currencyService.findAll();
     }
 
+    @GetMapping("/allEnum")
+    public List<Currency> allCurrenciesEnum() {
+        return currencyService.allCurrency();
+    }
+
     @GetMapping("/symbol")
     public Currency findByName(@RequestParam("symbol") String symbol) {
         return currencyService.findBySymbol(symbol);
@@ -59,10 +64,6 @@ public class CurrencyController {
     @GetMapping("/price")
     public Double findPriceBySymbol(@RequestParam("symbol") String symbol) {
         return currencyService.getPriceBySymbol(symbol);
-    }
-
-    private Currency convertToCurrency(CurrencyDTO currencyDTO) {
-        return modelMapper.map(currencyDTO, Currency.class);
     }
 
 }

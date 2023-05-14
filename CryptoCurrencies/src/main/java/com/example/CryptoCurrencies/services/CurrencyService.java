@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -87,6 +88,16 @@ public class CurrencyService {
 
     public List<Currency> findAll() {
         return currencyRepository.findAll();
+    }
+
+    public List<Currency> allCurrency() {
+        List<Currency> currencies = currencyRepository.findAll();
+        List symbolDB = new ArrayList();
+
+        for (int i = 0; i < currencies.size(); i++) {
+            symbolDB.add(currencies.get(i).getSymbol());
+        }
+        return symbolDB;
     }
 
 }
