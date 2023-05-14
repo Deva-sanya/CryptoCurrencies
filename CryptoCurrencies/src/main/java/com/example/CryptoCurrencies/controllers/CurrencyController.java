@@ -40,7 +40,7 @@ public class CurrencyController {
     }
 
     @GetMapping("/symbol")
-    public Currency findByName(@RequestParam("symbol") String symbol) {
+    public Currency findBySymbol(@RequestParam("symbol") String symbol) {
         return currencyService.findBySymbol(symbol);
     }
 
