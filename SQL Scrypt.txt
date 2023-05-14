@@ -14,3 +14,17 @@ insert into crypto_currency (id_currency, symbol) values (80,'ETH');
 insert into crypto_currency (id_currency, symbol) values (48543,'SOL');
 select *
 from crypto_currency;
+create table users
+(
+    id          SERIAL PRIMARY KEY,
+    id_currency int,
+    name        varchar(100)
+);
+alter table users
+    drop id_currency;
+CREATE TABLE user_currency
+(
+    user_id     int REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE,
+    currency_id int REFERENCES crypto_currency (id) ON UPDATE CASCADE,
+    CONSTRAINT user_currency_pkey PRIMARY KEY (user_id, currency_id)
+);
