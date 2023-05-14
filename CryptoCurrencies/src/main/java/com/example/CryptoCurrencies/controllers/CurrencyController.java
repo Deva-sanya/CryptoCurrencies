@@ -3,7 +3,6 @@ package com.example.CryptoCurrencies.controllers;
 import com.example.CryptoCurrencies.models.Currency;
 import com.example.CryptoCurrencies.services.CurrencyService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
