@@ -10,6 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -18,7 +20,9 @@ import java.time.LocalDateTime;
 @Table(name = "crypto_currency")
 public class Currency implements Serializable {
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id", unique = true, nullable = false)
     private Integer id;
 
     @Column(name = "id_currency")
@@ -36,6 +40,15 @@ public class Currency implements Serializable {
     @Column(name = "time")
     @NotNull
     private LocalDateTime priceDateTime;
+
+    @ManyToMany
+    @JoinTable(name = "user_currency", joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "currency_id"))
+    private Set<User> users = new HashSet<>();
+
+    public Currency() {
+
+    }
 
 
 }

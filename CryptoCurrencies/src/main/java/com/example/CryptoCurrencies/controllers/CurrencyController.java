@@ -1,7 +1,9 @@
 package com.example.CryptoCurrencies.controllers;
 
 import com.example.CryptoCurrencies.models.Currency;
+import com.example.CryptoCurrencies.models.User;
 import com.example.CryptoCurrencies.services.CurrencyService;
+import com.example.CryptoCurrencies.services.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +19,12 @@ import java.util.List;
 public class CurrencyController {
 
     private final CurrencyService currencyService;
+    private final UserService userService;
 
     @Autowired
-    public CurrencyController(CurrencyService currencyService) {
+    public CurrencyController(CurrencyService currencyService, UserService userService) {
         this.currencyService = currencyService;
+        this.userService = userService;
     }
 
     @GetMapping("/all")
@@ -56,12 +60,11 @@ public class CurrencyController {
     }
 
     @GetMapping("/notify")
-    public String notify(@RequestParam("name") String name, @RequestParam("symbol") String symbol) throws JsonProcessingException {
-        List<Currency> currencies = currencyService.findAll();
-        for (int i = 0; i < currencies.size(); i++) {
-            Currency currencyDB = currencies.get(i);
-            currencyService.savePrice(currencyDB, symbol);
-        }
+    public String notify(@RequestParam("name") String name, @RequestParam("symbol") String symbol) {
+        User user = new User();
+        user.setName(name);
+        userService.saveUser(user);
+
         String hello = "Hello, " + name + " you checked currency with symbol " + symbol + ". Current price: " +
                 currencyService.getPriceBySymbol(symbol);
         return hello;
