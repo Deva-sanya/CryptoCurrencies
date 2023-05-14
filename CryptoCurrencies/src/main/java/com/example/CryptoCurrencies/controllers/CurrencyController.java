@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -37,16 +39,25 @@ public class CurrencyController {
         return currencyService.findBySymbol(symbol);
     }
 
-    //@Scheduled(fixedRate = 60000)
+
+    @Scheduled(fixedRate = 60000)
     @PostMapping(value = "/getPrice")
-    public ResponseEntity<HttpStatus> saveCurrentPrice( CurrencyDTO currencyDTO, @RequestParam("symbol") String symbol) throws JsonProcessingException {
-        Currency currencyToAdd = convertToCurrency(currencyDTO);
-        currencyService.savePrice(currencyToAdd, symbol);
+    public ResponseEntity<HttpStatus> getPrice() throws JsonProcessingException {
+        List<Currency> currencies = currencyService.findAll();
+        List symbolDB = new ArrayList();
+
+        for (int i = 0; i < currencies.size(); i++) {
+            Currency currencyDB = currencies.get(i);
+
+            symbolDB.add(currencies.get(i).getSymbol());
+            String symbolDBSTR = (String) symbolDB.get(i);
+            currencyService.savePrice(currencyDB,symbolDBSTR);
+        }
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @GetMapping("/price")
-    public Double findPriceBySymbol( @RequestParam("symbol") String symbol) {
+    public Double findPriceBySymbol(@RequestParam("symbol") String symbol) {
         return currencyService.getPriceBySymbol(symbol);
     }
 
