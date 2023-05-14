@@ -11,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -65,6 +66,7 @@ public class CurrencyService {
 
     @Transactional
     public Currency savePrice(Currency currency, String symbol) throws JsonProcessingException {
+        currency = findBySymbol(symbol);
         enrichPrice(currency, symbol);
         currencyRepository.save(currency);
         return currency;
@@ -77,6 +79,11 @@ public class CurrencyService {
 
     public Currency findBySymbol(String symbol) {
         return currencyRepository.findBySymbol(symbol);
+    }
+
+    public Double getPriceBySymbol(String symbol) {
+        Currency currency = findBySymbol(symbol);
+        return currency.getPrice_usd();
     }
 
     public List<Currency> findAll() {

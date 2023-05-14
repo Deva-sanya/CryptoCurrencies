@@ -39,10 +39,15 @@ public class CurrencyController {
 
     //@Scheduled(fixedRate = 60000)
     @PostMapping(value = "/getPrice")
-    public ResponseEntity<HttpStatus> saveCurrentPrice(@RequestBody @Valid CurrencyDTO currencyDTO, @RequestParam("symbol") String symbol) throws JsonProcessingException {
+    public ResponseEntity<HttpStatus> saveCurrentPrice( CurrencyDTO currencyDTO, @RequestParam("symbol") String symbol) throws JsonProcessingException {
         Currency currencyToAdd = convertToCurrency(currencyDTO);
         currencyService.savePrice(currencyToAdd, symbol);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @GetMapping("/price")
+    public Double findPriceBySymbol( @RequestParam("symbol") String symbol) {
+        return currencyService.getPriceBySymbol(symbol);
     }
 
     private Currency convertToCurrency(CurrencyDTO currencyDTO) {

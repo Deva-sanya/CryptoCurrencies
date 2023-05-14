@@ -1,10 +1,16 @@
-create table crypto_currency (
-    id int, symbol varchar(3)
+create table crypto_currency
+(
+    id          SERIAL PRIMARY KEY,
+    id_currency int,
+    symbol      varchar(3),
+    price       double precision,
+    time        timestamp
 );
-insert into crypto_currency values (90,'BTS');
-insert into crypto_currency values (80,'ETH');
-insert into crypto_currency values (48543,'SOL');
-select * from crypto_currency;
-alter table crypto_currency add column price double precision;
-alter table crypto_currency add column time timestamp;
-select * from crypto_currency;
+
+select *
+from crypto_currency;
+insert into crypto_currency (id_currency, symbol) values (90,'BTC');
+insert into crypto_currency (id_currency, symbol) values (80,'ETH');
+insert into crypto_currency (id_currency, symbol) values (48543,'SOL');
+select *
+from crypto_currency;

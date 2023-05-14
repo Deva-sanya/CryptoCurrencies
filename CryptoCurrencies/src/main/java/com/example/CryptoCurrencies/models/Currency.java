@@ -21,6 +21,9 @@ public class Currency implements Serializable {
     @Column(name = "id")
     private Integer id;
 
+    @Column(name = "id_currency")
+    private Integer idCurrency;
+
     @Column(name = "symbol")
     @NotEmpty(message = "Symbol of currency should not be empty")
     @Size(min = 1, max = 3, message = "The symbol of the currency should be between 1 and 100 characters long.")
